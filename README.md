@@ -1,4 +1,4 @@
 likefaith
 =========
 
-GitHub Pages site using sheetsee.js to show a list of churches of like faith
+GitHub Pages site using sheetsee.js and a Google Docs spreadsheet and form to record and display churches of like faith.
