@@ -1,8 +1,213 @@
 <html>
   <head>
+      <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <title>Like Faith</title>
+      <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.css' rel='stylesheet' />
+      <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic'>
+      <link rel="stylesheet" type="text/css" href="css/style.css">
+      <link rel="stylesheet" type="text/css" href="css/site.css">
   </head>
   <body>
-    <h1>Like Faith</h1>
+    <div id="wrapper">
+      <h1>Like Faith</h1>
+      <div>
+        <ul class="nav">
+          <li><strong>Churches of like faith in South America</strong></li>
+          <li><a href="http://jlord.github.com/sheetsee.js" target="_blank">POWERED BY SHEETSEE.JS</a> -</li>
+          <li><a href="https://github.com/jonmagic/likefaith" target="_blank">GITHUB</a></li>
+        </ul>
+      </div>
+      <div class="container">
+        <div id="rightSide">
+          <div id="latestSpot"></div>
+          <div id="selectedSpot"></div>
+        </div>
+        <div id="map"></div>
+      </div>
+      <div class="container">
+        <input id="tableFilter" type="text" placeholder="filter by.."></input>
+        <span class="clear button">Clear</span> <span class="resetMap button">Reset Map</span>
+        <span class="noMatches">no matches</span>
+        <div id="hackSpotsTable"></div>
+      </div>
+      <div id="info" class="container">
+        <h3>Contribute!</h3>
+        <div id="theNumberOfChurches"></div>
+        <p>Add a church by filling out <a href="https://docs.google.com/forms/d/1_5yennw60YGFT_FLrqPoqu3OPifzbx4jZ-n6flzg8Kw/viewform">this form</a></p>
+      </div>
+    </div><!-- end wrapper -->
+
+    <script id="hackSpotsTable" type="text/html">
+      <table>
+        <tr>
+          <th class="tHeader">Nombre de Iglesia</th>
+          <th class="tHeader">Afiliacion</th>
+          <th class="tHeader">Ciudad ó Pueblo</th>
+          <th class="tHeader">Provincia</th>
+          <th class="tHeader">Departamento</th>
+          <th class="">Elsewhere</th>
+        </tr>
+        {{#rows}}
+          <tr id="{{rowNumber}}" class="spotRow">
+            <td>{{nombredeiglesia}}</td>
+            <td>{{afiliacion}}</td>
+            <td>{{ciudadópueblo}}</td>
+            <td>{{provincia}}</td>
+            <td>{{departamento}}</td>
+            <td><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{ciudadópueblo}},{{provincia}},{{departamento}}" target="_blank">G Map</a></td>
+          </tr>
+          <tr class="hideRow"><td>wifi: {{wifipassword}}</td></tr>
+        {{/rows}}
+      </table>
+    </script>
+
+    <script id="latestSpot" type="text/html">
+        {{#rows}}
+          <h4 class="fauxButton">MOST RECENT CHURCH</h4>
+          <h2>{{nombredeiglesia}}</h2>
+          <p class="colorText">{{dirección}}<p>
+          <p class="colorText">{{ciudadópueblo}}, {{provincia}} {{departamento}}</p>
+          <ul>
+            <li><span class="category">Afiliacion:</span> {{afiliacion}}</li>
+            <li><span class="category">Pastor/anciano ó encargado:</span> {{pastorancianoóencargado}}</li>
+            <li><span class="category">Contacto telefónico:</span> {{contactotelefónico}}</li>
+          </ul>
+          <ul>
+            <li><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{ciudadópueblo}},{{provincia}},{{departamento}}" target="_blank">View in Google Map</a></li>
+          </ul>
+        {{/rows}}
+    </script>
+
+    <script id="theNumberOfChurches" type="text/html">
+      <p><strong><span class="red-text">{{numberOfChurches}}</span> churches strong!</p>
+    </script>
+
+    <script id="selectedSpot" type="text/html">
+      {{#rows}}
+        <h4 class="fauxButton">SELECTED CHURCH</h4>
+        <h2>{{nombredeiglesia}}</h2>
+        <p class="colorText">{{dirección}}<p>
+        <p class="colorText">{{ciudadópueblo}}, {{provincia}} {{departamento}}</p>
+        <ul>
+          <li><span class="category">Afiliacion:</span> {{afiliacion}}</li>
+          <li><span class="category">Pastor/anciano ó encargado:</span> {{pastorancianoóencargado}}</li>
+          <li><span class="category">Contacto telefónico:</span> {{contactotelefónico}}</li>
+        </ul>
+        <ul>
+          <li><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{ciudadópueblo}},{{provincia}},{{departamento}}" target="_blank">View in Google Map</a></li>
+        </ul>
+      {{/rows}}
+    </script>
+
+    <script type="text/javascript" src="js/ICanHaz.js"></script>
+    <script type="text/javascript" src='http://api.tiles.mapbox.com/mapbox.js/v1.4.0/mapbox.js'></script>
+    <script type="text/javascript" src='js/jquery.js '></script>
+    <script type="text/javascript" src='js/tabletop.js'></script>
+    <script type="text/javascript" src='js/sheetsee.js'></script>
+    <script type="text/javascript" src='js/leaflet.markercluster.js'></script>
+    <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', function() {
+        var gData
+        var URL = "0AvInehRc9mxbdExJZ2NvcHNyeVpkRWUwQTFyZ2hmRXc"
+        Tabletop.init( { key: URL, callback: showInfo, simpleSheet: true } )
+      })
+
+      // so long, so messy
+
+      function showInfo(data) {
+        gData = data
+        window.foo = data
+        // make the table, and the search bar
+        Sheetsee.makeTable(gData, "#hackSpotsTable")
+        Sheetsee.initiateTableFilter(gData, "#tableFilter", "#hackSpotsTable")
+
+        // when someone clicks on a row, highlight it and
+        // re-center the map
+        $('.spotRow').live("click", function(event) {
+          $('.spotRow').removeClass("selectedRow")
+          var rowNumber = $(this).closest("tr").attr("id")
+          $('#' + rowNumber).addClass("selectedRow")
+          var dataElement = Sheetsee.getMatches(gData, rowNumber, "rowNumber")
+          var selectedSpot = ich.selectedSpot({
+            rows: dataElement
+          })
+          $('#latestSpot').css("display", "none")
+          $('#selectedSpot').html(selectedSpot).css("display", "inline")
+          var selectedCoords = [dataElement[0].lat, dataElement[0].long]
+          matchGeoJSONbyRowNumber(rowNumber, geoJSON, gData, "#FF4646")
+          var markerLayer = Sheetsee.addMarkerLayer(geoJSON, map, 13)
+          map.panTo(selectedCoords, 13)
+        })
+
+        // so that the first map and info that loads
+        // is complete and doesn't show rows that are
+        // actively being edited by folk
+        function findLatestCompleteSpot(data) {
+          var latestCompleteSpot = []
+          var startWithLatestRow = data.reverse()
+          startWithLatestRow.forEach(function(row){
+            if (!row.lat || !row.long || !row.nombredeiglesia || !row.dirección || !row.ciudadópueblo || !row.provincia || !row.departamento ) return
+            else latestCompleteSpot.push(row)
+          })
+          return latestCompleteSpot[0]
+        }
+
+        // find the latest spot with the most important
+        // info filled in (to prevent map breaking if
+        // someone is currently editing spreadsheet)
+        var theLatestSpot = findLatestCompleteSpot(gData)
+        var latestSpot = ich.latestSpot({
+           rows: theLatestSpot
+        })
+        $('#latestSpot').html(latestSpot)
+
+        function highlightLastMarker(geoJSON, highlightColor) {
+          geoJSON[0].properties["marker-color"] = highlightColor
+          return geoJSON
+        }
+
+        // create geoJSON with coordinates and other
+        // useful bits from the original data
+        var optionsJSON = ["nombredeiglesia", "dirección", "ciudadópueblo", "provincia", "departamento", "rowNumber"]
+        var geoJSONnoHL = Sheetsee.createGeoJSON(gData, optionsJSON)
+        // change the color of the most recently added spot's marker
+        var geoJSON = highlightLastMarker(geoJSONnoHL, "#FF4646")
+        // create map, tilelayer (map background), markers and popups
+        var map = Sheetsee.loadMap("map")
+        Sheetsee.addTileLayer(map, 'examples.map-20v6611k')
+        var markerLayer = Sheetsee.addMarkerLayer(geoJSON, map, 13)
+
+        $('.resetMap').click(function() {
+          $('.spotRow').removeClass("selectedRow")
+          markerLayer = Sheetsee.addMarkerLayer(geoJSON, map, 13)
+          $('#latestSpot').css("display", "inline")
+          $('#selectedSpot').css("display", "none")
+        })
+
+        // find total number of spots added
+        var numberOfChurches = gData.length
+        var theNumberOfChurches = ich.theNumberOfChurches({
+          numberOfChurches: numberOfChurches
+        })
+        $('#theNumberOfChurches').html(theNumberOfChurches)
+
+        function matchGeoJSONbyRowNumber(rowNumber, geoJSON, gdata, highlightColor) {
+          geoJSON.forEach(function (d) {
+            if (d.properties["marker-color"] === highlightColor) {
+              var origColor = gData[0].hexcolor
+              d.properties["marker-color"] = origColor
+            }
+            for (var key in d.opts) {
+              var value = d.opts[key].toString().toLowerCase()
+              if (key === 'rowNumber' && value.match(rowNumber.toString().toLowerCase())) {
+                d.properties["marker-color"] = highlightColor
+                return geoJSON
+              }
+            }
+          })
+        }
+      }
+    </script>
   </body>
 </html>
