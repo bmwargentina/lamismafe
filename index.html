@@ -33,7 +33,6 @@
       </div>
       <div id="contribution-form" class="container">
         <h3>Contribuir</h3>
-        <div id="theNumberOfChurches"></div>
         <iframe src="https://docs.google.com/forms/d/1_5yennw60YGFT_FLrqPoqu3OPifzbx4jZ-n6flzg8Kw/viewform?embedded=true" width="760" height="900" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
       </div>
     </div><!-- end wrapper -->
@@ -77,10 +76,6 @@
             <li><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{localidad}},{{barrio}},{{departamento}},{{provincia}}" target="_blank">Ver en Google Map</a></li>
           </ul>
         {{/rows}}
-    </script>
-
-    <script id="theNumberOfChurches" type="text/html">
-      <p><strong><span class="red-text">{{numberOfChurches}}</span> churches strong!</p>
     </script>
 
     <script id="selectedSpot" type="text/html">
@@ -189,13 +184,6 @@
           $('#latestSpot').css("display", "inline")
           $('#selectedSpot').css("display", "none")
         })
-
-        // find total number of spots added
-        var numberOfChurches = gData.length
-        var theNumberOfChurches = ich.theNumberOfChurches({
-          numberOfChurches: numberOfChurches
-        })
-        $('#theNumberOfChurches').html(theNumberOfChurches)
 
         function matchGeoJSONbyRowNumber(rowNumber, geoJSON, gdata, highlightColor) {
           geoJSON.forEach(function (d) {
