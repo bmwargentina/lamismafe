@@ -2,7 +2,7 @@
   <head>
       <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>Like Faith</title>
+      <title>Guía de Iglesias</title>
       <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.css' rel='stylesheet' />
       <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic'>
       <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -10,12 +10,12 @@
   </head>
   <body>
     <div id="wrapper">
-      <h1>Like Faith</h1>
+      <h1>Guía de Iglesias</h1>
       <div>
         <ul class="nav">
-          <li><strong>Churches of like faith in South America</strong></li>
-          <li><a href="http://jlord.github.com/sheetsee.js" target="_blank">POWERED BY SHEETSEE.JS</a> -</li>
-          <li><a href="https://github.com/jonmagic/likefaith" target="_blank">GITHUB</a></li>
+          <li><strong><a href="#contribution-form">Contribuir a una iglesia</a></strong></li>
+          <li><a href="http://jlord.github.com/sheetsee.js" target="_blank">Impulsado por SHEETSEE.JS</a> -</li>
+          <li><a href="https://github.com/jonmagic/likefaith" target="_blank">Proyecto en GITHUB</a></li>
         </ul>
       </div>
       <div class="container">
@@ -31,10 +31,10 @@
         <span class="noMatches">no matches</span>
         <div id="hackSpotsTable"></div>
       </div>
-      <div id="info" class="container">
-        <h3>Contribute!</h3>
+      <div id="contribution-form" class="container">
+        <h3>Contribuir</h3>
         <div id="theNumberOfChurches"></div>
-        <p>Add a church by filling out <a href="https://docs.google.com/forms/d/1_5yennw60YGFT_FLrqPoqu3OPifzbx4jZ-n6flzg8Kw/viewform">this form</a></p>
+        <iframe src="https://docs.google.com/forms/d/1_5yennw60YGFT_FLrqPoqu3OPifzbx4jZ-n6flzg8Kw/viewform?embedded=true" width="760" height="900" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
       </div>
     </div><!-- end wrapper -->
 
@@ -43,19 +43,17 @@
         <tr>
           <th class="tHeader">Nombre de Iglesia</th>
           <th class="tHeader">Afiliacion</th>
-          <th class="tHeader">Ciudad ó Pueblo</th>
+          <th class="tHeader">Localidad</th>
           <th class="tHeader">Provincia</th>
-          <th class="tHeader">Departamento</th>
           <th class="">Elsewhere</th>
         </tr>
         {{#rows}}
           <tr id="{{rowNumber}}" class="spotRow">
             <td>{{nombredeiglesia}}</td>
             <td>{{afiliacion}}</td>
-            <td>{{ciudadópueblo}}</td>
+            <td>{{localidad}}</td>
             <td>{{provincia}}</td>
-            <td>{{departamento}}</td>
-            <td><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{ciudadópueblo}},{{provincia}},{{departamento}}" target="_blank">G Map</a></td>
+            <td><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{localidad}},{{barrio}},{{departamento}},{{provincia}}" target="_blank">G Map</a></td>
           </tr>
           <tr class="hideRow"><td>wifi: {{wifipassword}}</td></tr>
         {{/rows}}
@@ -64,17 +62,19 @@
 
     <script id="latestSpot" type="text/html">
         {{#rows}}
-          <h4 class="fauxButton">MOST RECENT CHURCH</h4>
+          <h4 class="fauxButton">MÁS RECIENTE IGLESIA</h4>
           <h2>{{nombredeiglesia}}</h2>
           <p class="colorText">{{dirección}}<p>
-          <p class="colorText">{{ciudadópueblo}}, {{provincia}} {{departamento}}</p>
+          <p class="colorText">{{localidad}} {{barrio}} {{departamento}} {{provincia}}</p>
           <ul>
+            <li><span class="category">Fichero de Culto:</span> {{ficherodeculto}}</li>
             <li><span class="category">Afiliacion:</span> {{afiliacion}}</li>
-            <li><span class="category">Pastor/anciano ó encargado:</span> {{pastorancianoóencargado}}</li>
+            <li><span class="category">Pastor ó Anciano ó Encargado:</span> {{pastoróancianoóencargado}}</li>
             <li><span class="category">Contacto telefónico:</span> {{contactotelefónico}}</li>
+            <li><span class="category">Correo electronico:</span> {{correoelectronico}}</li>
           </ul>
           <ul>
-            <li><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{ciudadópueblo}},{{provincia}},{{departamento}}" target="_blank">View in Google Map</a></li>
+            <li><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{localidad}},{{barrio}},{{departamento}},{{provincia}}" target="_blank">Ver en Google Map</a></li>
           </ul>
         {{/rows}}
     </script>
@@ -85,17 +85,19 @@
 
     <script id="selectedSpot" type="text/html">
       {{#rows}}
-        <h4 class="fauxButton">SELECTED CHURCH</h4>
+        <h4 class="fauxButton">IGLESIA SELECCIONADOS</h4>
         <h2>{{nombredeiglesia}}</h2>
         <p class="colorText">{{dirección}}<p>
-        <p class="colorText">{{ciudadópueblo}}, {{provincia}} {{departamento}}</p>
+        <p class="colorText">{{localidad}} {{barrio}} {{departamento}} {{provincia}}</p>
         <ul>
+          <li><span class="category">Fichero de Culto:</span> {{ficherodeculto}}</li>
           <li><span class="category">Afiliacion:</span> {{afiliacion}}</li>
-          <li><span class="category">Pastor/anciano ó encargado:</span> {{pastorancianoóencargado}}</li>
+          <li><span class="category">Pastor ó Anciano ó Encargado:</span> {{pastoróancianoóencargado}}</li>
           <li><span class="category">Contacto telefónico:</span> {{contactotelefónico}}</li>
+          <li><span class="category">Correo electronico:</span> {{correoelectronico}}</li>
         </ul>
         <ul>
-          <li><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{ciudadópueblo}},{{provincia}},{{departamento}}" target="_blank">View in Google Map</a></li>
+          <li><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{localidad}},{{barrio}},{{departamento}},{{provincia}}" target="_blank">Ver en Google Map</a></li>
         </ul>
       {{/rows}}
     </script>
@@ -117,6 +119,7 @@
 
       function showInfo(data) {
         gData = data
+        window.foo = data
 
         // make the table, and the search bar
         Sheetsee.makeTable(gData, "#hackSpotsTable")
@@ -147,7 +150,7 @@
           var latestCompleteSpot = []
           var startWithLatestRow = data.reverse()
           startWithLatestRow.forEach(function(row){
-            if (!row.lat || !row.long || !row.nombredeiglesia || !row.dirección || !row.ciudadópueblo || !row.provincia || !row.departamento ) return
+            if (!row.lat || !row.long || !row.nombredeiglesia || !row.dirección || !row.localidad || !row.barrio || !row.departamento || !row.provincia ) return
             else latestCompleteSpot.push(row)
           })
           return latestCompleteSpot[0]
@@ -163,13 +166,15 @@
         $('#latestSpot').html(latestSpot)
 
         function highlightLastMarker(geoJSON, highlightColor) {
-          geoJSON[0].properties["marker-color"] = highlightColor
+          if(geoJSON[0] != undefined){
+            geoJSON[0].properties["marker-color"] = highlightColor
+          }
           return geoJSON
         }
 
         // create geoJSON with coordinates and other
         // useful bits from the original data
-        var optionsJSON = ["nombredeiglesia", "dirección", "ciudadópueblo", "provincia", "departamento", "rowNumber"]
+        var optionsJSON = ["nombredeiglesia", "dirección", "localidad", "barrio", "departamento", "provincia", "rowNumber"]
         var geoJSONnoHL = Sheetsee.createGeoJSON(gData, optionsJSON)
         // change the color of the most recently added spot's marker
         var geoJSON = highlightLastMarker(geoJSONnoHL, "#FF4646")
@@ -199,6 +204,7 @@
               d.properties["marker-color"] = origColor
             }
             for (var key in d.opts) {
+              console.log(d.opts, key)
               var value = d.opts[key].toString().toLowerCase()
               if (key === 'rowNumber' && value.match(rowNumber.toString().toLowerCase())) {
                 d.properties["marker-color"] = highlightColor
