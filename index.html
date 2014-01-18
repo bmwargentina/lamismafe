@@ -13,7 +13,7 @@
       <h1>Guía de Iglesias</h1>
       <div>
         <ul class="nav">
-          <li><strong><a href="#contribution-form">Contribuir a una iglesia</a></strong></li>
+          <li><strong><a href="#contribution-form">Agregue una Iglesia</a></strong></li>
           <li><a href="http://jlord.github.com/sheetsee.js" target="_blank">Impulsado por SHEETSEE.JS</a> -</li>
           <li><a href="https://github.com/jonmagic/likefaith" target="_blank">Proyecto en GITHUB</a></li>
         </ul>
@@ -32,7 +32,7 @@
         <div id="hackSpotsTable"></div>
       </div>
       <div id="contribution-form" class="container">
-        <h3>Contribuir</h3>
+        <h3>Agregar</h3>
         <iframe src="https://docs.google.com/forms/d/1_5yennw60YGFT_FLrqPoqu3OPifzbx4jZ-n6flzg8Kw/viewform?embedded=true" width="760" height="900" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
       </div>
     </div><!-- end wrapper -->
@@ -41,15 +41,15 @@
       <table>
         <tr>
           <th class="tHeader">Nombre de Iglesia</th>
-          <th class="tHeader">Afiliacion</th>
+          <th class="tHeader">Afiliación</th>
           <th class="tHeader">Localidad</th>
           <th class="tHeader">Provincia</th>
-          <th class="">Elsewhere</th>
+          <th class="">Ubicación</th>
         </tr>
         {{#rows}}
           <tr id="{{rowNumber}}" class="spotRow">
             <td>{{nombredeiglesia}}</td>
-            <td>{{afiliacion}}</td>
+            <td>{{afiliación}}</td>
             <td>{{localidad}}</td>
             <td>{{provincia}}</td>
             <td><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{localidad}},{{provincia}},Argentina" target="_blank">G Map</a></td>
@@ -67,10 +67,10 @@
           <p class="colorText">{{localidad}} {{barrio}} {{departamento}} {{provincia}}</p>
           <ul>
             <li><span class="category">Fichero de Culto:</span> {{ficherodeculto}}</li>
-            <li><span class="category">Afiliacion:</span> {{afiliacion}}</li>
-            <li><span class="category">Pastor ó Anciano ó Encargado:</span> {{pastoróancianoóencargado}}</li>
+            <li><span class="category">Afiliación:</span> {{afiliación}}</li>
+            <li><span class="category">Pastor, Anciano ó Encargado:</span> {{pastorancianoóencargado}}</li>
             <li><span class="category">Contacto telefónico:</span> {{contactotelefónico}}</li>
-            <li><span class="category">Correo electronico:</span> {{correoelectronico}}</li>
+            <li><span class="category">Correo electrónico:</span> {{correoelectrónico}}</li>
           </ul>
           <ul>
             <li><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{localidad}},{{provincia}},Argentina" target="_blank">Ver en Google Map</a></li>
@@ -80,16 +80,16 @@
 
     <script id="selectedSpot" type="text/html">
       {{#rows}}
-        <h4 class="fauxButton">IGLESIA SELECCIONADOS</h4>
+        <h4 class="fauxButton">IGLESIAS SELECCIONADAS</h4>
         <h2>{{nombredeiglesia}}</h2>
         <p class="colorText">{{dirección}}<p>
         <p class="colorText">{{localidad}} {{barrio}} {{departamento}} {{provincia}}</p>
         <ul>
           <li><span class="category">Fichero de Culto:</span> {{ficherodeculto}}</li>
-          <li><span class="category">Afiliacion:</span> {{afiliacion}}</li>
-          <li><span class="category">Pastor ó Anciano ó Encargado:</span> {{pastoróancianoóencargado}}</li>
+          <li><span class="category">Afiliación:</span> {{afiliación}}</li>
+          <li><span class="category">Pastor, Anciano ó Encargado:</span> {{pastorancianoóencargado}}</li>
           <li><span class="category">Contacto telefónico:</span> {{contactotelefónico}}</li>
-          <li><span class="category">Correo electronico:</span> {{correoelectronico}}</li>
+          <li><span class="category">Correo electrónico:</span> {{correoelectrónico}}</li>
         </ul>
         <ul>
           <li><a class="button" href="https://maps.google.com/maps?q={{dirección}},{{localidad}},{{provincia}},Argentina" target="_blank">Ver en Google Map</a></li>
@@ -114,7 +114,6 @@
 
       function showInfo(data) {
         gData = data
-        window.foo = data
 
         // make the table, and the search bar
         Sheetsee.makeTable(gData, "#hackSpotsTable")
@@ -192,7 +191,6 @@
               d.properties["marker-color"] = origColor
             }
             for (var key in d.opts) {
-              console.log(d.opts, key)
               var value = d.opts[key].toString().toLowerCase()
               if (key === 'rowNumber' && value.match(rowNumber.toString().toLowerCase())) {
                 d.properties["marker-color"] = highlightColor
