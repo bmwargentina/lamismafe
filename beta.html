@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Guía Argentina de Iglesias Evangélicas</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+      .search-form {
+        padding-top: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Guía Argentina de Iglesias Evangélicas</h1>
+      <p>El proposition de esta guia es proveer un directorio interactivo de Iglesias que estan de acuerdo con <a href="fundamentos_basicos_de_la_fe.html" target="_blank">fundamentos basicos</a> de la fe.</p>
+
+      <form class="search-form form-horizontal" role="form" action="#">
+        <div class="form-group">
+          <div class="col-sm-7">
+            <input type="text" id="query" class="form-control" placeholder="Search by name or location" />
+          </div>
+        </div>
+      </form>
+
+      <table id="results" class="table table-striped">
+        <thead>
+          <tr>
+            <th class="tHeader">Nombre de Iglesia</th>
+            <th class="tHeader">Afiliación</th>
+            <th class="tHeader">Localidad</th>
+            <th class="">Ubicación</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+      <h3>Agregar</h3>
+      <p>Para agregar una iglesia enviar los datos a: <a href="mailto:owens.wj@gmail.com">owens.wj@gmail.com</a></p>
+
+      <hr>
+      <ul class="list-inline">
+        <li><a href="https://github.com/bmwargentina/lamismafe" target="_blank">Proyecto en GitHub</a></li>
+      </ul>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.1.0/tabletop.min.js"></script>
+    <script src="js/liquidmetal.js"></script>
+
+    <script type="text/javascript">
+      var DATA = [],
+          table = $("#results tbody");
+      Tabletop.init({key: "0AvInehRc9mxbdGtMeVpacmtWbVNMZGJkYTNQakVPY1E", callback: function(data){ DATA = data }, simpleSheet: true});
+
+      $(document).on("keyup", "#query", function(event){
+        event.preventDefault();
+
+        var query = $(this).val();
+        if(query.length < 3){
+          table.empty();
+          return;
+        }
+
+        // loop through and score each record by the query
+        var results = [];
+        $.each(DATA, function(){
+          var record = this,
+              testString = record["nombredeiglesia"] + " " + record["dirección"] + " " + record["localidad"] + " " + record["departamento"],
+              score = LiquidMetal.score(testString, query);
+
+          if(score > 0.0){
+            record.score = score;
+            results.push(record);
+          }
+        });
+
+        // sort results by score
+        results.sort(function(a, b){
+          return b.score-a.score;
+        });
+
+        // update the table
+        table.empty();
+        $.each(results, function(){
+          var record = this,
+              rowId = "rowNumber" + results.rowNumber,
+              row   = $("#" + rowId),
+              link  = "https://maps.google.com/maps?q=";
+
+          link += [record["dirección"], record["localidad"], record["provincia"], "Argentina"].filter(function(n){ return n != undefined }).join()
+
+          row = $("<tr></tr>")
+          row.attr("id", rowId)
+          $("<td>" + record["nombredeiglesia"] + "</td>").appendTo(row);
+          $("<td>" + record["afiliación"] + "</td>").appendTo(row);
+          $("<td>" + record["localidad"] + "</td>").appendTo(row);
+          $("<td><a class='btn btn-primary' href='" + link + "' target='_blank'>Map</a></td>").appendTo(row);
+          row.appendTo(table);
+        });
+      });
+    </script>
+  </body>
+</html>
