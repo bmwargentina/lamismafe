@@ -77,7 +77,7 @@
         var results = [];
         $.each(DATA, function(){
           var record = this,
-              testString = record["nombredeiglesia"] + " " + record["dirección"] + " " + record["localidad"] + " " + record["departamento"],
+              testString = record["nombredeiglesia"] + " " + record["dirección"] + " " + record["localidad"] + " " + record["departamento"] + " " + record["afiliación"],
               score = LiquidMetal.score(testString, query);
 
           if(score > 0.0){
