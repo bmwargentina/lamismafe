@@ -189,55 +189,71 @@
           }
         });
 
-        // sort results by score
-        results.sort(function(a, b){
-          return b.score-a.score;
-        });
+        if(results.length > 0){
+          // sort results by score
+          results.sort(function(a, b){
+            return b.score-a.score;
+          });
 
-        // update the tbody
-        tbody.empty();
-        $.each(results, function(){
-          var record = this,
-              rowId = "rowNumber" + record.rowNumber,
-              row   = $("#" + rowId),
-              link  = "https://maps.google.com/maps?q=";
+          // update the tbody
+          tbody.empty();
+          $.each(results, function(i){
+            if(i < 8){
+              var record = this,
+                  rowId = "rowNumber" + record.rowNumber,
+                  row   = $("#" + rowId),
+                  link  = "https://maps.google.com/maps?q=";
 
-          link += [record["dirección"], record["localidad"], record["provincia"], "Argentina"].filter(function(n){ return n != undefined }).join();
+              link += [record["dirección"], record["localidad"], record["provincia"], "Argentina"].filter(function(n){ return n != undefined }).join();
 
-          row = $("<tr></tr>");
-          row.attr("id", rowId);
-          row.data("record", record)
-          $("<td>" + record["nombredeiglesia"] + "</td>").appendTo(row);
-          $("<td>" + record["afiliación"] + "</td>").appendTo(row);
-          $("<td>" + record["localidad"] + "</td>").appendTo(row);
-          row.appendTo(tbody);
-        });
-
-        // bind to click on result
-        $(document).on("click", "#results td", function(){
-          var result = $(this).parents("tr"),
-              record = result.data("record");
-
-          // set title
-          updateDetail(record, "afiliación");
-          updateDetail(record, "nombredeiglesia");
-          updateDetail(record, "contactotelefónico");
-          updateDetail(record, "correoelectrónico");
-          updateDetail(record, "barrio");
-          updateDetail(record, "departamento");
-          updateDetail(record, "dirección");
-          updateDetail(record, "ficherodeculto");
-          updateDetail(record, "localidad");
-          updateDetail(record, "nombredeiglesia");
-          details.find(".map-link").attr("href", buildMapLink(record));
-          showDetails();
-        });
-
-        // bind to back to search button
-        $(document).on("click", "#back", function(){
-          showSearch();
-        });
+              row = $("<tr></tr>");
+              row.attr("id", rowId);
+              row.data("record", record)
+              $("<td>" + record["nombredeiglesia"] + "</td>").appendTo(row);
+              $("<td>" + record["afiliación"] + "</td>").appendTo(row);
+              $("<td>" + record["localidad"] + "</td>").appendTo(row);
+              row.appendTo(tbody);
+            }
+          });
+          table.show();
+        }else{
+          table.hide();
+        }
       });
+
+      // bind to click on result
+      $(document).on("click", "#results td", function(){
+        var result = $(this).parents("tr"),
+            record = result.data("record");
+
+        // set title
+        updateDetail(record, "afiliación");
+        updateDetail(record, "nombredeiglesia");
+        updateDetail(record, "contactotelefónico");
+        updateDetail(record, "correoelectrónico");
+        updateDetail(record, "barrio");
+        updateDetail(record, "departamento");
+        updateDetail(record, "dirección");
+        updateDetail(record, "ficherodeculto");
+        updateDetail(record, "localidad");
+        updateDetail(record, "nombredeiglesia");
+        details.find(".map-link").attr("href", buildMapLink(record));
+        showDetails();
+      });
+
+      // bind to back to search button
+      $(document).on("click", "#back", function(){
+        showSearch();
+      });
+
+      // hide results to start
+      table.hide();
+
+      // set footer height
+      var footer     = $("#footer"),
+          footerTop  = footer.offset().top,
+          pageHeight = $(document).height();
+      footer.height(pageHeight - footerTop);
     </script>
   </body>
 </html>
