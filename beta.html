@@ -17,6 +17,12 @@
       .search-form {
         padding-top: 25px;
       }
+      #results td {
+        cursor: pointer;
+      }
+      #details {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -24,7 +30,7 @@
       <h1>Guía Argentina de Iglesias Evangélicas</h1>
       <p>El proposition de esta guia es proveer un directorio interactivo de Iglesias que estan de acuerdo con <a href="fundamentos_basicos_de_la_fe.html" target="_blank">fundamentos basicos</a> de la fe.</p>
 
-      <form class="search-form form-horizontal" role="form" action="#">
+      <form id="search" class="search-form form-horizontal" role="form" action="#">
         <div class="form-group">
           <div class="col-sm-7">
             <input type="text" id="query" class="form-control" placeholder="Search by name or location" />
@@ -38,12 +44,32 @@
             <th class="tHeader">Nombre de Iglesia</th>
             <th class="tHeader">Afiliación</th>
             <th class="tHeader">Localidad</th>
-            <th class="">Ubicación</th>
           </tr>
         </thead>
         <tbody>
         </tbody>
       </table>
+
+      <section id="details">
+        <p><button id="back" type="button" class="btn btn-warning">Back to Search</button></p>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title nombredeiglesia"></h3>
+          </div>
+          <div class="panel-body">
+            <p><strong>Afiliación</strong>: <span class="afiliación"></span></p>
+            <p><strong>Contacto Telefónico</strong>: <span class="contactotelefónico"></span></p>
+            <p><strong>Correo Electrónico</strong>: <span class="correoelectrónico"></span></p>
+            <p><strong>Barrio</strong>: <span class="barrio"></span></p>
+            <p><strong>Departamento</strong>: <span class="departamento"></span></p>
+            <p><strong>Dirección</strong>: <span class="dirección"></span></p>
+            <p><strong>Ficherodeculto</strong>: <span class="ficherodeculto"></span></p>
+            <p><strong>Localidad</strong>: <span class="localidad"></span></p>
+            <p><strong>Nombre de Iglesia</strong>: <span class="nombredeiglesia"></span></p>
+            <p><a class="btn btn-primary btn-lg map-link" href="http://maps.google.com" target="_blank">Map</a></p>
+          </div>
+        </div>
+      </section>
 
       <h3>Agregar</h3>
       <p>Para agregar una iglesia enviar los datos a: <a href="mailto:owens.wj@gmail.com">owens.wj@gmail.com</a></p>
@@ -60,16 +86,65 @@
     <script src="js/liquidmetal.js"></script>
 
     <script type="text/javascript">
-      var DATA = [],
-          table = $("#results tbody");
+      var DATA    = [],
+          search  = $("#search"),
+          table   = $("#results"),
+          tbody   = table.children("tbody"),
+          details = $("#details");
+
+      // hide the search form and results and show details
+      function showDetails(){
+        search.hide();
+        table.hide();
+        details.show();
+      }
+
+      // hide details and show the search form and results
+      function showSearch(){
+        details.hide();
+        search.show();
+        table.show();
+      }
+
+      // sets html for elements with matching class
+      function updateDetail(record, fieldName){
+        var element = details.find("." + fieldName),
+            parent  = element.parents("p"),
+            value   = record[fieldName];
+
+        if(value == "" || value == null || value == undefined){
+          parent.hide();
+        }else{
+          element.html(value);
+          parent.show();
+        }
+      }
+
+      // return map url for record
+      function buildMapLink(record){
+        // if(record["lat"] && record["long"]){
+        //   return "http://www.openstreetmap.org/#map=15/" + record["lat"] + "/" + record["long"];
+        // }else{
+          var query = "";
+          if(record["dirección"]) query += record["dirección"] + ",";
+          if(record["localidad"]) query += record["localidad"] + ",";
+          if(record["provincia"]) query += record["provincia"] + ",";
+          query += "Argentina";
+
+          return "https://maps.google.com/maps?q=" + query;
+        // }
+      }
+
+      // pull down the data
       Tabletop.init({key: "0AvInehRc9mxbdGtMeVpacmtWbVNMZGJkYTNQakVPY1E", callback: function(data){ DATA = data }, simpleSheet: true});
 
+      // bind to key up on the search form
       $(document).on("keyup", "#query", function(event){
         event.preventDefault();
 
         var query = $(this).val();
         if(query.length < 3){
-          table.empty();
+          tbody.empty();
           return;
         }
 
@@ -91,23 +166,48 @@
           return b.score-a.score;
         });
 
-        // update the table
-        table.empty();
+        // update the tbody
+        tbody.empty();
         $.each(results, function(){
           var record = this,
-              rowId = "rowNumber" + results.rowNumber,
+              rowId = "rowNumber" + record.rowNumber,
               row   = $("#" + rowId),
               link  = "https://maps.google.com/maps?q=";
 
-          link += [record["dirección"], record["localidad"], record["provincia"], "Argentina"].filter(function(n){ return n != undefined }).join()
+          link += [record["dirección"], record["localidad"], record["provincia"], "Argentina"].filter(function(n){ return n != undefined }).join();
 
-          row = $("<tr></tr>")
-          row.attr("id", rowId)
+          row = $("<tr></tr>");
+          row.attr("id", rowId);
+          row.data("record", record)
           $("<td>" + record["nombredeiglesia"] + "</td>").appendTo(row);
           $("<td>" + record["afiliación"] + "</td>").appendTo(row);
           $("<td>" + record["localidad"] + "</td>").appendTo(row);
-          $("<td><a class='btn btn-primary' href='" + link + "' target='_blank'>Map</a></td>").appendTo(row);
-          row.appendTo(table);
+          row.appendTo(tbody);
+        });
+
+        // bind to click on result
+        $(document).on("click", "#results td", function(){
+          var result = $(this).parents("tr"),
+              record = result.data("record");
+
+          // set title
+          updateDetail(record, "afiliación");
+          updateDetail(record, "nombredeiglesia");
+          updateDetail(record, "contactotelefónico");
+          updateDetail(record, "correoelectrónico");
+          updateDetail(record, "barrio");
+          updateDetail(record, "departamento");
+          updateDetail(record, "dirección");
+          updateDetail(record, "ficherodeculto");
+          updateDetail(record, "localidad");
+          updateDetail(record, "nombredeiglesia");
+          details.find(".map-link").attr("href", buildMapLink(record));
+          showDetails();
+        });
+
+        // bind to back to search button
+        $(document).on("click", "#back", function(){
+          showSearch();
         });
       });
     </script>
