@@ -181,8 +181,13 @@
         var results = [];
         $.each(DATA, function(){
           var record = this,
-              testString = record["nombredeiglesia"] + " " + record["dirección"] + " " + record["localidad"] + " " + record["departamento"] + " " + record["afiliación"],
-              score = LiquidMetal.score(testString, query);
+              scores = [LiquidMetal.score(record["nombredeiglesia"], query),
+                        LiquidMetal.score(record["dirección"], query),
+                        LiquidMetal.score(record["localidad"], query),
+                        LiquidMetal.score(record["departamento"], query),
+                        LiquidMetal.score(record["afiliación"], query)],
+              score = scores.sort().reverse()[0];
+
 
           if(score > 0.0){
             record.score = score;
