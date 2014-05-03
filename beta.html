@@ -250,6 +250,11 @@
       // hide results to start
       table.hide();
 
+      // prevent default form behavior
+      $(document).on("submit", "#search", function(e){
+        e.preventDefault();
+      });
+
       // set footer height
       var footer     = $("#footer"),
           footerTop  = footer.offset().top,
