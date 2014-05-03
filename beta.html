@@ -22,14 +22,39 @@
       }
       #details {
         display: none;
+        margin-top: 22px;
+      }
+      #header {
+        background-color: #5C4581;
+        color: #fff;
+        padding-bottom: 10px;
+      }
+      #subtitle {
+        background-color: #EBEBEB;
+        padding-bottom: 10px;
+      }
+      #subtitle h2 {
+        font-size: 16px;
+      }
+      #footer {
+        background-color: #FAFAFA;
+        margin-top: 10px;
+        padding-top: 15px;
       }
     </style>
   </head>
   <body>
+    <div id="header">
+      <div class="container">
+        <h1>Guía Argentina de Iglesias Evangélicas</h1>
+      </div>
+    </div>
+    <div id="subtitle">
+      <div class="container">
+        <h2>El proposition de esta guia es proveer un directorio interactivo de Iglesias que estan de acuerdo con <a href="fundamentos_basicos_de_la_fe.html" target="_blank">fundamentos basicos</a> de la fe.</h2>
+      </div>
+    </div>
     <div class="container">
-      <h1>Guía Argentina de Iglesias Evangélicas</h1>
-      <p>El proposition de esta guia es proveer un directorio interactivo de Iglesias que estan de acuerdo con <a href="fundamentos_basicos_de_la_fe.html" target="_blank">fundamentos basicos</a> de la fe.</p>
-
       <form id="search" class="search-form form-horizontal" role="form" action="#">
         <div class="form-group">
           <div class="col-sm-7">
@@ -73,11 +98,14 @@
 
       <h3>Agregar</h3>
       <p>Para agregar una iglesia enviar los datos a: <a href="mailto:owens.wj@gmail.com">owens.wj@gmail.com</a></p>
+    </div>
 
-      <hr>
-      <ul class="list-inline">
-        <li><a href="https://github.com/bmwargentina/lamismafe" target="_blank">Proyecto en GitHub</a></li>
-      </ul>
+    <div id="footer">
+      <div class="container">
+        <ul class="list-inline">
+          <li><a href="https://github.com/bmwargentina/lamismafe" target="_blank">Proyecto en GitHub</a></li>
+        </ul>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
